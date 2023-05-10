@@ -1,5 +1,6 @@
-const express = require("express");
 require("dotenv").config();
+
+const express = require("express");
 
 //Routes
 const userRoutes = require("./src/users/routes");
@@ -16,4 +17,4 @@ app.use("/department", departmentRoutes);
 app.use("/subDepartment", subDepartmentRoutes);
 app.use("/admin", adminAuthRoutes);
 
-app.listen(3000);
+app.listen(process.env.PORT);
