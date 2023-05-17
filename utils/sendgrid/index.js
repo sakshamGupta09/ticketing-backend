@@ -21,9 +21,7 @@ class Email {
         dynamicTemplateData: this.dynamicTemplateData,
       };
       await sgMail.send(msg);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   }
 }
 
