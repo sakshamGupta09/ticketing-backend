@@ -35,3 +35,25 @@ exports.generateRefreshToken = (payload) => {
     );
   });
 };
+
+exports.verifyToken = (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.TOKEN_SCRET, function (err, decoded) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(decoded);
+    });
+  });
+};
+
+exports.verifyRefreshToken = (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.REFRESH_TOKEN_SCRET, function (err, decoded) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(decoded);
+    });
+  });
+};
