@@ -4,6 +4,8 @@ const MESSAGES = {
   SERVER_ERROR: "Internal server error.",
   TOKEN_NOT_FOUND: "This link has expired",
   PASSWORD_UPDATED: "Password updated successfully",
+  INVALID_PASSWORD: "Invalid password",
+  LOGIN_SUCCESSFUL: "Login succeeded",
 };
 
 module.exports = MESSAGES;
