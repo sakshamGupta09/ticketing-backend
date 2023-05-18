@@ -5,6 +5,7 @@ const Email = require("../../../utils/sendgrid");
 const EMAIL_TEMPLATES = require("../../../constants/sendgrid/templates");
 const FRONTEND_LINKS = require("../../../constants/frontend");
 const { generateHash } = require("../../../utils/bcrypt");
+const MESSAGES = require("../messages");
 
 exports.login = (req, res, next) => {};
 
@@ -12,7 +13,10 @@ exports.forgotPassword = async (req, res, next) => {
   try {
     const [rows, fields] = await service.findUserByEmail(req.body.email);
     if (rows.length === 0) {
-      const errorResponse = new HttpErrorResponse(404, "Email not found");
+      const errorResponse = new HttpErrorResponse(
+        404,
+        MESSAGES.EMAIL_NOT_FOUND
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
     const user = rows[0];
@@ -24,10 +28,10 @@ exports.forgotPassword = async (req, res, next) => {
     });
     await emailObj.sendEmail();
 
-    const httpResponse = new HttpResponse(200, "Email sent");
+    const httpResponse = new HttpResponse(200, MESSAGES.EMAIL_SENT);
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, "Internal server error");
+    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -36,7 +40,10 @@ exports.resetPassword = async (req, res, next) => {
   try {
     const [rows, fields] = await service.findUserToken(req.body.token);
     if (rows.length === 0) {
-      const errorResponse = new HttpErrorResponse(404, "Token not found");
+      const errorResponse = new HttpErrorResponse(
+        404,
+        MESSAGES.TOKEN_NOT_FOUND
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
 
@@ -46,7 +53,10 @@ exports.resetPassword = async (req, res, next) => {
     const currentTime = new Date();
 
     if (currentTime > expirationTime) {
-      const errorResponse = new HttpErrorResponse(401, "Token expired");
+      const errorResponse = new HttpErrorResponse(
+        401,
+        MESSAGES.TOKEN_NOT_FOUND
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
 
@@ -54,13 +64,13 @@ exports.resetPassword = async (req, res, next) => {
     const hashedPassword = await generateHash(password);
     await service.updateUserPassword(row.user_id, hashedPassword);
 
-    const httpResponse = new HttpResponse(200, "Password updated");
+    const httpResponse = new HttpResponse(200, MESSAGES.PASSWORD_UPDATED);
     res.status(httpResponse.statusCode).send(httpResponse);
 
     await service.deleteUsedTokens(row.user_id);
   } catch (error) {
     console.error(error);
-    const errorResponse = new HttpErrorResponse(500, "Internal server error");
+    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
