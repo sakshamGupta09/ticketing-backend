@@ -3,7 +3,16 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controller");
 
-router.post("/add", controller.addUser);
+const verifyTokenMiddleware = require("../../../middlewares/verify-token");
+const checkUserRole = require("../../../middlewares/roles");
+const ROLES = require("../../../constants/roles");
+
+router.post(
+  "/add",
+  verifyTokenMiddleware,
+  checkUserRole(ROLES.ADMIN),
+  controller.addUser
+);
 
 router.get("/list", controller.getUsers);
 

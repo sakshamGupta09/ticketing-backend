@@ -6,7 +6,7 @@ exports.generateAuthToken = (payload) => {
       payload,
       process.env.TOKEN_SCRET,
       {
-        expiresIn: process.env.TOKEN_EXPIRY,
+        expiresIn: +process.env.TOKEN_EXPIRY,
       },
       function (err, token) {
         if (err) {
@@ -42,7 +42,7 @@ exports.verifyToken = (token) => {
       if (err) {
         return reject(err);
       }
-      resolve(decoded);
+      return resolve(decoded);
     });
   });
 };

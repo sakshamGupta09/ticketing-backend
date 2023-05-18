@@ -51,7 +51,6 @@ exports.login = async (req, res, next) => {
     });
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    console.error(error);
     const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
     return res.status(errorResponse.statusCode).send(errorResponse);
   }

@@ -1,6 +1,6 @@
 const { verifyToken } = require("../utils/jwt");
 const { HttpResponse, HttpErrorResponse } = require("../utils/http");
-const MESSAGES = require("../messages");
+const MESSAGES = require("./messages");
 
 async function verifyTokenMiddleware(req, res, next) {
   try {
