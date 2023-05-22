@@ -40,7 +40,7 @@ exports.login = async (req, res, next) => {
       last_name: user.last_name,
       email: user.email,
       phone: user.phone,
-      role: user.role,
+      role_id: user.role_id,
     };
     const authToken = await generateAuthToken(payload);
     const refreshToken = await generateRefreshToken(payload);

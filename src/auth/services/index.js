@@ -2,7 +2,7 @@ const db = require("../../../database");
 
 exports.findUserByEmail = (email) => {
   return db.execute(
-    `SELECT id, first_name, last_name, phone, role, email, password FROM users WHERE email = ?`,
+    `SELECT id, first_name, last_name, phone, role_id, email, password FROM users WHERE email = ?`,
     [email]
   );
 };

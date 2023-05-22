@@ -14,12 +14,24 @@ router.post(
   controller.addUser
 );
 
+router.get("/exists", verifyTokenMiddleware, controller.userExists);
+
 router.get("/list", controller.getUsers);
 
 router.get("/:userId", controller.getUserById);
 
-router.put("/update/:userId", controller.updateUser);
+router.put(
+  "/update/:userId",
+  verifyTokenMiddleware,
+  checkUserRole(ROLES.ADMIN),
+  controller.updateUser
+);
 
-router.delete("/delete/:userId", controller.deleteUser);
+router.delete(
+  "/delete/:userId",
+  verifyTokenMiddleware,
+  checkUserRole(ROLES.ADMIN),
+  controller.deleteUser
+);
 
 module.exports = router;
