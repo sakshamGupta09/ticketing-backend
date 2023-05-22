@@ -45,7 +45,30 @@ exports.getUsers = (req, res, next) => {};
 
 exports.getUserById = (req, res, next) => {};
 
-exports.updateUser = (req, res, next) => {};
+exports.updateUser = async (req, res, next) => {
+  try {
+    const [result, fields] = await service.updateUser(
+      req.body.user,
+      req.params.userId
+    );
+    const httpResponse = new HttpResponse(201, MESSAGES.USER_UPDATED, {});
+    return res.status(httpResponse.statusCode).send(httpResponse);
+  } catch (error) {
+    if (error?.code === "ER_DUP_ENTRY") {
+      const duplicateValue = getDuplicateValue(error.message);
+      let errorMessage;
+      if (duplicateValue === req.body.user.email) {
+        errorMessage = MESSAGES.EMAIL_EXISTS;
+      } else {
+        errorMessage = MESSAGES.PHONE_EXISTS;
+      }
+      const errorResponse = new HttpErrorResponse(400, errorMessage);
+      return res.status(errorResponse.statusCode).send(errorResponse);
+    }
+    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    return res.status(errorResponse.statusCode).send(errorResponse);
+  }
+};
 
 exports.deleteUser = async (req, res, next) => {
   try {
