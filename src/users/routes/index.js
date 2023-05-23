@@ -1,16 +1,19 @@
 const express = require("express");
-
 const router = express.Router();
 const controller = require("../controller");
-
 const verifyTokenMiddleware = require("../../../middlewares/verify-token");
 const checkUserRole = require("../../../middlewares/roles");
 const ROLES = require("../../../constants/roles");
+const { checkSchema } = require("express-validator");
+const { addUserSchema } = require("../validations");
+const validateRequest = require("../../../middlewares/validate-request");
 
 router.post(
   "/add",
   verifyTokenMiddleware,
   checkUserRole(ROLES.ADMIN),
+  checkSchema(addUserSchema, ["body"]),
+  validateRequest,
   controller.addUser
 );
 
