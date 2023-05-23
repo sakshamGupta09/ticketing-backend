@@ -18,7 +18,12 @@ router.get("/exists", verifyTokenMiddleware, controller.userExists);
 
 router.get("/list", controller.getUsers);
 
-router.get("/:userId", controller.getUserById);
+router.get(
+  "/:userId",
+  verifyTokenMiddleware,
+  checkUserRole(ROLES.ADMIN),
+  controller.getUserById
+);
 
 router.put(
   "/update/:userId",

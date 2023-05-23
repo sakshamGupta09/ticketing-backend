@@ -28,6 +28,13 @@ exports.updateUser = (user, userId) => {
   );
 };
 
+exports.getUserById = (userId) => {
+  return db.execute(
+    `SELECT id, first_name, last_name, email, phone, role_id, created_at, updated_at FROM users WHERE id = ?`,
+    [userId]
+  );
+};
+
 exports.deleteUser = (userId) => {
   return db.execute(`DELETE FROM users WHERE id = ?`, [userId]);
 };

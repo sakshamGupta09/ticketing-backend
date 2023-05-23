@@ -43,7 +43,26 @@ exports.userExists = async (req, res, next) => {
 
 exports.getUsers = (req, res, next) => {};
 
-exports.getUserById = (req, res, next) => {};
+exports.getUserById = async (req, res, next) => {
+  try {
+    const [rows, fields] = await service.getUserById(req.params.userId);
+    if (rows.length === 0) {
+      const errorResponse = new HttpErrorResponse(
+        404,
+        MESSAGES.USER_ID_NOT_EXIST
+      );
+      return res.status(errorResponse.statusCode).send(errorResponse);
+    }
+
+    const httpResponse = new HttpResponse(200, MESSAGES.SUCCESS, {
+      user: rows[0],
+    });
+    return res.status(httpResponse.statusCode).send(httpResponse);
+  } catch (error) {
+    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    return res.status(errorResponse.statusCode).send(errorResponse);
+  }
+};
 
 exports.updateUser = async (req, res, next) => {
   try {

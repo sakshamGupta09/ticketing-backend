@@ -6,6 +6,7 @@ const MESSAGES = {
   SUCCESS: "Success",
   DELETED: "User deleted successfullY",
   USER_UPDATED: "User updated successfully",
+  USER_ID_NOT_EXIST: "User does not exist",
 };
 
 module.exports = MESSAGES;
