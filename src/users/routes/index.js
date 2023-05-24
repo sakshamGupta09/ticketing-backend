@@ -32,6 +32,8 @@ router.put(
   "/update/:userId",
   verifyTokenMiddleware,
   checkUserRole(ROLES.ADMIN),
+  checkSchema(addUserSchema, ["body"]),
+  validateRequest,
   controller.updateUser
 );
 

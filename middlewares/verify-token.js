@@ -7,7 +7,7 @@ async function verifyTokenMiddleware(req, res, next) {
     const token = req.headers.authorization;
     if (!token) {
       const errorResponse = new HttpErrorResponse(
-        403,
+        401,
         MESSAGES.TOKEN_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
