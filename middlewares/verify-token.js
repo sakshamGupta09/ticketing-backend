@@ -1,13 +1,15 @@
 const { verifyToken } = require("../utils/jwt");
-const { HttpResponse, HttpErrorResponse } = require("../utils/http");
+const { HttpErrorResponse } = require("../utils/http");
 const MESSAGES = require("./messages");
+const STATUS_CODES = require("../constants/status-codes");
+const ERROR_CODES = require("../constants/error-codes");
 
 async function verifyTokenMiddleware(req, res, next) {
   try {
     const token = req.headers.authorization;
     if (!token) {
       const errorResponse = new HttpErrorResponse(
-        401,
+        STATUS_CODES.UNAUTHORIZED,
         MESSAGES.TOKEN_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -16,11 +18,17 @@ async function verifyTokenMiddleware(req, res, next) {
     req.user = user;
     return next();
   } catch (error) {
-    if (error?.name === "TokenExpiredError") {
-      const errorResponse = new HttpErrorResponse(401, MESSAGES.TOKEN_EXPIRED);
+    if (error?.name === ERROR_CODES.TOKEN_EXPIRED) {
+      const errorResponse = new HttpErrorResponse(
+        STATUS_CODES.UNAUTHORIZED,
+        MESSAGES.TOKEN_EXPIRED
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 }

@@ -1,3 +1,3 @@
-const SENDER_EMAIL = "kingsg09@gmail.com";
+const SENDER_EMAIL = process.env.SENDER_EMAIL;
 
 module.exports = SENDER_EMAIL;

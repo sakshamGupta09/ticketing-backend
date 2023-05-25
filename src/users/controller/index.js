@@ -2,16 +2,22 @@ const service = require("../service");
 const { HttpResponse, HttpErrorResponse } = require("../../../utils/http");
 const getDuplicateValue = require("../../../utils/sql-error");
 const MESSAGES = require("../messages");
+const STATUS_CODES = require("../../../constants/status-codes");
+const ERROR_CODES = require("../../../constants/error-codes");
 
 exports.addUser = async (req, res, next) => {
   try {
     const [result, fields] = await service.insertUser(req.body.user);
-    const httpResponse = new HttpResponse(201, MESSAGES.USER_ADDED, {
-      user_id: result.insertId,
-    });
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.RESOURCE_CREATED,
+      MESSAGES.USER_ADDED,
+      {
+        user_id: result.insertId,
+      }
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    if (error?.code === "ER_DUP_ENTRY") {
+    if (error?.code === ERROR_CODES.DUPLICATE_ENTRY) {
       const duplicateValue = getDuplicateValue(error.message);
       let errorMessage;
       if (duplicateValue === req.body.user.email) {
@@ -22,7 +28,10 @@ exports.addUser = async (req, res, next) => {
       const errorResponse = new HttpErrorResponse(400, errorMessage);
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -31,12 +40,19 @@ exports.userExists = async (req, res, next) => {
   try {
     const { entityName, entityValue } = req.query;
     const [result, fields] = await service.userExists(entityName, entityValue);
-    const httpResponse = new HttpResponse(200, MESSAGES.SUCCESS, {
-      exists: result[0].count > 0,
-    });
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.SUCCESS,
+      {
+        exists: result[0].count > 0,
+      }
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -48,18 +64,25 @@ exports.getUserById = async (req, res, next) => {
     const [rows, fields] = await service.getUserById(req.params.userId);
     if (rows.length === 0) {
       const errorResponse = new HttpErrorResponse(
-        404,
+        STATUS_CODES.NOT_FOUND,
         MESSAGES.USER_ID_NOT_EXIST
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
 
-    const httpResponse = new HttpResponse(200, MESSAGES.SUCCESS, {
-      user: rows[0],
-    });
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.SUCCESS,
+      {
+        user: rows[0],
+      }
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -70,10 +93,14 @@ exports.updateUser = async (req, res, next) => {
       req.body.user,
       req.params.userId
     );
-    const httpResponse = new HttpResponse(201, MESSAGES.USER_UPDATED, {});
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.RESOURCE_CREATED,
+      MESSAGES.USER_UPDATED,
+      {}
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    if (error?.code === "ER_DUP_ENTRY") {
+    if (error?.code === ERROR_CODES.DUPLICATE_ENTRY) {
       const duplicateValue = getDuplicateValue(error.message);
       let errorMessage;
       if (duplicateValue === req.body.user.email) {
@@ -81,10 +108,16 @@ exports.updateUser = async (req, res, next) => {
       } else {
         errorMessage = MESSAGES.PHONE_EXISTS;
       }
-      const errorResponse = new HttpErrorResponse(400, errorMessage);
+      const errorResponse = new HttpErrorResponse(
+        STATUS_CODES.BAD_REQUEST,
+        errorMessage
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -92,10 +125,17 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
   try {
     const [result, fields] = await service.deleteUser(req.params.userId);
-    const httpResponse = new HttpResponse(200, MESSAGES.DELETED, {});
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.DELETED,
+      {}
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };

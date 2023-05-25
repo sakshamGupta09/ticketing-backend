@@ -1,5 +1,5 @@
 const FRONTEND_LINKS = {
-  DOMAIN: "https://saksham-ticketing.vercel.app",
+  DOMAIN: process.env.FORNTEND_BASE_URL,
 };
 
 module.exports = FRONTEND_LINKS;

@@ -19,7 +19,12 @@ router.post(
 
 router.get("/exists", verifyTokenMiddleware, controller.userExists);
 
-router.get("/list", controller.getUsers);
+router.get(
+  "/list",
+  verifyTokenMiddleware,
+  checkUserRole(ROLES.ADMIN),
+  controller.getUsers
+);
 
 router.get(
   "/:userId",

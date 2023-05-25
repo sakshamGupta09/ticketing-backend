@@ -10,6 +10,7 @@ const {
   generateAuthToken,
   generateRefreshToken,
 } = require("../../../utils/jwt");
+const STATUS_CODES = require("../../../constants/status-codes");
 
 exports.login = async (req, res, next) => {
   try {
@@ -18,7 +19,7 @@ exports.login = async (req, res, next) => {
     const [rows, fields] = await service.findUserByEmail(email);
     if (rows.length === 0) {
       const errorResponse = new HttpErrorResponse(
-        404,
+        STATUS_CODES.NOT_FOUND,
         MESSAGES.EMAIL_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -29,7 +30,7 @@ exports.login = async (req, res, next) => {
     const isPasswordMatch = await verifyHash(password, user.password);
     if (!isPasswordMatch) {
       const errorResponse = new HttpErrorResponse(
-        401,
+        STATUS_CODES.UNAUTHORIZED,
         MESSAGES.INVALID_PASSWORD
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -45,13 +46,20 @@ exports.login = async (req, res, next) => {
     const authToken = await generateAuthToken(payload);
     const refreshToken = await generateRefreshToken(payload);
 
-    const httpResponse = new HttpResponse(200, MESSAGES.LOGIN_SUCCESSFUL, {
-      authToken,
-      refreshToken,
-    });
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.LOGIN_SUCCESSFUL,
+      {
+        authToken,
+        refreshToken,
+      }
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -61,7 +69,7 @@ exports.forgotPassword = async (req, res, next) => {
     const [rows, fields] = await service.findUserByEmail(req.body.email);
     if (rows.length === 0) {
       const errorResponse = new HttpErrorResponse(
-        404,
+        STATUS_CODES.NOT_FOUND,
         MESSAGES.EMAIL_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -75,10 +83,16 @@ exports.forgotPassword = async (req, res, next) => {
     });
     await emailObj.sendEmail();
 
-    const httpResponse = new HttpResponse(200, MESSAGES.EMAIL_SENT);
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.EMAIL_SENT
+    );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -88,7 +102,7 @@ exports.resetPassword = async (req, res, next) => {
     const [rows, fields] = await service.findUserToken(req.body.token);
     if (rows.length === 0) {
       const errorResponse = new HttpErrorResponse(
-        404,
+        STATUS_CODES.NOT_FOUND,
         MESSAGES.TOKEN_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -101,7 +115,7 @@ exports.resetPassword = async (req, res, next) => {
 
     if (currentTime > expirationTime) {
       const errorResponse = new HttpErrorResponse(
-        401,
+        STATUS_CODES.UNAUTHORIZED,
         MESSAGES.TOKEN_NOT_FOUND
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
@@ -111,12 +125,18 @@ exports.resetPassword = async (req, res, next) => {
     const hashedPassword = await generateHash(password);
     await service.updateUserPassword(row.user_id, hashedPassword);
 
-    const httpResponse = new HttpResponse(200, MESSAGES.PASSWORD_UPDATED);
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.PASSWORD_UPDATED
+    );
     res.status(httpResponse.statusCode).send(httpResponse);
 
     await service.deleteUsedTokens(row.user_id);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(500, MESSAGES.SERVER_ERROR);
+    const errorResponse = new HttpErrorResponse(
+      STATUS_CODES.SERVER_ERROR,
+      MESSAGES.SERVER_ERROR
+    );
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
