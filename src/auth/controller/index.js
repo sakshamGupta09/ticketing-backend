@@ -79,7 +79,7 @@ exports.forgotPassword = async (req, res, next) => {
     await service.insertForgotPasswordEntry(user.id, uuid);
 
     const emailObj = new Email(user.email, EMAIL_TEMPLATES.FORGOT_PASSWORD, {
-      url: `${FRONTEND_LINKS.DOMAIN}/reset-password/${uuid}`,
+      url: `${FRONTEND_LINKS.BASE_URL}/reset-password/${uuid}`,
     });
     await emailObj.sendEmail();
 

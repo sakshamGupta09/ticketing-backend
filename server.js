@@ -7,10 +7,12 @@ const userRoutes = require("./src/users/routes");
 const departmentRoutes = require("./src/departments/routes");
 const subDepartmentRoutes = require("./src/sub-departments/routes");
 const adminAuthRoutes = require("./src/auth/routes");
+const allowCORS = require("./middlewares/cors");
 
 const app = express();
 
 app.use(express.json());
+app.use(allowCORS);
 
 app.use("/user", userRoutes);
 app.use("/department", departmentRoutes);
