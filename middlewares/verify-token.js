@@ -3,6 +3,7 @@ const { HttpErrorResponse } = require("../utils/http");
 const MESSAGES = require("./messages");
 const STATUS_CODES = require("../constants/status-codes");
 const ERROR_CODES = require("../constants/error-codes");
+const getServerError = require("../utils/server-error");
 
 async function verifyTokenMiddleware(req, res, next) {
   try {
@@ -30,10 +31,7 @@ async function verifyTokenMiddleware(req, res, next) {
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 }

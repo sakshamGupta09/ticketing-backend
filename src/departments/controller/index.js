@@ -1,6 +1,7 @@
 const ERROR_CODES = require("../../../constants/error-codes");
 const STATUS_CODES = require("../../../constants/status-codes");
 const { HttpResponse, HttpErrorResponse } = require("../../../utils/http");
+const getServerError = require("../../../utils/server-error");
 const MESSAGES = require("../messages");
 const service = require("../service");
 
@@ -24,10 +25,7 @@ exports.addDepartment = async (req, res, next) => {
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -43,10 +41,7 @@ exports.getDepartments = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -65,10 +60,7 @@ exports.getDepartmentById = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -93,10 +85,7 @@ exports.updateDepartment = async (req, res, next) => {
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -113,10 +102,7 @@ exports.deleteDepartment = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };

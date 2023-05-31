@@ -11,6 +11,7 @@ const {
   generateRefreshToken,
 } = require("../../../utils/jwt");
 const STATUS_CODES = require("../../../constants/status-codes");
+const getServerError = require("../../../utils/server-error");
 
 exports.login = async (req, res, next) => {
   try {
@@ -57,10 +58,7 @@ exports.login = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -90,10 +88,7 @@ exports.forgotPassword = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -134,10 +129,7 @@ exports.resetPassword = async (req, res, next) => {
 
     await service.deleteUsedTokens(row.user_id);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };

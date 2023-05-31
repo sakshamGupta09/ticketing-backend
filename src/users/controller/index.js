@@ -4,6 +4,7 @@ const getDuplicateValue = require("../../../utils/sql-error");
 const MESSAGES = require("../messages");
 const STATUS_CODES = require("../../../constants/status-codes");
 const ERROR_CODES = require("../../../constants/error-codes");
+const getServerError = require("../../../utils/server-error");
 
 exports.addUser = async (req, res, next) => {
   try {
@@ -31,10 +32,7 @@ exports.addUser = async (req, res, next) => {
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -52,10 +50,7 @@ exports.userExists = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -82,10 +77,7 @@ exports.getUserById = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -117,10 +109,7 @@ exports.updateUser = async (req, res, next) => {
       );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
@@ -135,10 +124,7 @@ exports.deleteUser = async (req, res, next) => {
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
-    const errorResponse = new HttpErrorResponse(
-      STATUS_CODES.SERVER_ERROR,
-      MESSAGES.SERVER_ERROR
-    );
+    const errorResponse = getServerError();
     return res.status(errorResponse.statusCode).send(errorResponse);
   }
 };
