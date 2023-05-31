@@ -18,7 +18,12 @@ async function verifyTokenMiddleware(req, res, next) {
     req.user = user;
     return next();
   } catch (error) {
-    if (error?.name === ERROR_CODES.TOKEN_EXPIRED) {
+    if (
+      error?.name &&
+      [ERROR_CODES.TOKEN_EXPIRED, ERROR_CODES.INVALID_TOKEN].includes(
+        error.name
+      )
+    ) {
       const errorResponse = new HttpErrorResponse(
         STATUS_CODES.UNAUTHORIZED,
         MESSAGES.TOKEN_EXPIRED

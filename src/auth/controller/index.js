@@ -52,6 +52,7 @@ exports.login = async (req, res, next) => {
       {
         authToken,
         refreshToken,
+        ...payload,
       }
     );
     return res.status(httpResponse.statusCode).send(httpResponse);

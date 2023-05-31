@@ -25,7 +25,10 @@ exports.addUser = async (req, res, next) => {
       } else {
         errorMessage = MESSAGES.PHONE_EXISTS;
       }
-      const errorResponse = new HttpErrorResponse(400, errorMessage);
+      const errorResponse = new HttpErrorResponse(
+        STATUS_CODES.BAD_REQUEST,
+        errorMessage
+      );
       return res.status(errorResponse.statusCode).send(errorResponse);
     }
     const errorResponse = new HttpErrorResponse(
