@@ -55,7 +55,21 @@ exports.userExists = async (req, res, next) => {
   }
 };
 
-exports.getUsers = (req, res, next) => {};
+exports.getUsers = async (req, res, next) => {
+  try {
+    const [rows, fields] = await service.getUsers();
+
+    const httpResponse = new HttpResponse(
+      STATUS_CODES.SUCCESS,
+      MESSAGES.SUCCESS,
+      { users: rows }
+    );
+    return res.status(httpResponse.statusCode).send(httpResponse);
+  } catch (error) {
+    const errorResponse = getServerError();
+    return res.status(errorResponse.statusCode).send(errorResponse);
+  }
+};
 
 exports.getUserById = async (req, res, next) => {
   try {

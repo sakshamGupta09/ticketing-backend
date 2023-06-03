@@ -28,6 +28,12 @@ exports.updateUser = (user, userId) => {
   );
 };
 
+exports.getUsers = () => {
+  const query = `SELECT id, first_name, last_name, email, phone, role_id FROM users`;
+  const params = [];
+  return db.execute(query, params);
+};
+
 exports.getUserById = (userId) => {
   return db.execute(
     `SELECT id, first_name, last_name, email, phone, role_id, created_at, updated_at FROM users WHERE id = ?`,
