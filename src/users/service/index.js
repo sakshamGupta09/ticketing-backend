@@ -2,7 +2,7 @@ const db = require("../../../database");
 
 exports.insertUser = (user) => {
   return db.execute(
-    `INSERT INTO users(first_name, last_name, email, phone, role_id) VALUES(?, ?, ?, ?, ?)`,
+    "INSERT INTO `ticketing`.`users` (`first_name`, `last_name`, `email`, `phone`, `role_id`) VALUES(?, ?, ?, ?, ?)",
     [user.first_name, user.last_name, user.email, user.phone, user.role_id]
   );
 };

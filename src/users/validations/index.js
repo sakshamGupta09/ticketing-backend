@@ -27,7 +27,6 @@ exports.addUserSchema = {
 
   "user.email": {
     trim: true,
-    normalizeEmail: true,
     notEmpty: {
       errorMessage: "Email is required",
       bail: true,
@@ -61,4 +60,3 @@ exports.addUserSchema = {
     },
   },
 };
-
