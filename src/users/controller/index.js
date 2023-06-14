@@ -57,12 +57,14 @@ exports.userExists = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const [rows, fields] = await service.getUsers(req.query);
+    const [res1, res2] = await service.getUsers(req.query);
+    const [userRows, fields] = res1;
+    const [countRows] = res2;
 
     const httpResponse = new HttpResponse(
       STATUS_CODES.SUCCESS,
       MESSAGES.SUCCESS,
-      { users: rows }
+      { users: userRows, totalRecords: countRows[0].count }
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
   } catch (error) {
