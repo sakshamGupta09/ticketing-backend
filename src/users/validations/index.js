@@ -60,3 +60,26 @@ exports.addUserSchema = {
     },
   },
 };
+
+exports.getUsersSchema = {
+  limit: {
+    notEmpty: {
+      errorMessage: "Limit is required",
+      bail: true,
+    },
+    isInt: {
+      errorMessage: "Limit should be an integer",
+      bail: true,
+    },
+  },
+  offset: {
+    notEmpty: {
+      errorMessage: "Offset is required",
+      bail: true,
+    },
+    isInt: {
+      errorMessage: "Offset should be an integer",
+      bail: true,
+    },
+  },
+};

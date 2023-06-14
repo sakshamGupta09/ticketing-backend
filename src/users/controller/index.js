@@ -57,7 +57,7 @@ exports.userExists = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const [rows, fields] = await service.getUsers();
+    const [rows, fields] = await service.getUsers(req.query);
 
     const httpResponse = new HttpResponse(
       STATUS_CODES.SUCCESS,

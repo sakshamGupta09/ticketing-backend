@@ -5,7 +5,7 @@ const verifyTokenMiddleware = require("../../../middlewares/verify-token");
 const checkUserRole = require("../../../middlewares/roles");
 const ROLES = require("../../../constants/roles");
 const { checkSchema } = require("express-validator");
-const { addUserSchema } = require("../validations");
+const { addUserSchema, getUsersSchema } = require("../validations");
 const validateRequest = require("../../../middlewares/validate-request");
 
 router.post(
@@ -23,6 +23,8 @@ router.get(
   "/list",
   verifyTokenMiddleware,
   checkUserRole(ROLES.ADMIN),
+  checkSchema(getUsersSchema, ["query"]),
+  validateRequest,
   controller.getUsers
 );
 

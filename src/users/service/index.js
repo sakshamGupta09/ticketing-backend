@@ -28,9 +28,9 @@ exports.updateUser = (user, userId) => {
   );
 };
 
-exports.getUsers = () => {
-  const query = `SELECT id, first_name, last_name, email, phone, role_id FROM users`;
-  const params = [];
+exports.getUsers = ({ limit, offset }) => {
+  const query = `SELECT id, first_name, last_name, email, phone, role_id, created_at, updated_at FROM ticketing.users ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+  const params = [limit, offset];
   return db.execute(query, params);
 };
 
