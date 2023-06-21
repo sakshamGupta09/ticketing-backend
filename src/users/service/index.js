@@ -9,7 +9,7 @@ exports.insertUser = (user) => {
 
 exports.userExists = (entityName, entityValue) => {
   return db.execute(
-    `SELECT COUNT(id) AS count FROM users WHERE ${entityName} = ?`,
+    `SELECT EXISTS(SELECT id FROM users WHERE ${entityName} = ?) AS can_use`,
     [entityValue]
   );
 };

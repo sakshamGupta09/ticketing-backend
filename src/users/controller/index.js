@@ -45,7 +45,7 @@ exports.userExists = async (req, res, next) => {
       STATUS_CODES.SUCCESS,
       MESSAGES.SUCCESS,
       {
-        exists: result[0].count > 0,
+        exists: result[0].can_use == 1,
       }
     );
     return res.status(httpResponse.statusCode).send(httpResponse);
