@@ -28,14 +28,25 @@ exports.updateUser = (user, userId) => {
   );
 };
 
-exports.getUsers = ({ limit, offset }) => {
-  const query = `SELECT id, first_name, last_name, email, phone, role_id, created_at, updated_at FROM ticketing.users ORDER BY created_at DESC LIMIT ? OFFSET ?`;
-  const params = [limit, offset];
-  return Promise.all([db.execute(query, params), getUsersCount()]);
+exports.getUsers = ({ limit, offset, search }) => {
+  let query = `SELECT id, first_name, last_name, email, phone, role_id, created_at, updated_at FROM ticketing.users`;
+  let countQuery = `SELECT COUNT(id) AS count FROM ticketing.users`;
+  let params = [];
+
+  if (search) {
+    const pattern = `%${search}%`;
+    const searchCondition = ` WHERE(first_name LIKE '${pattern}' OR last_name LIKE '${pattern}' OR email LIKE '${pattern}' OR phone LIKE '${pattern}')`;
+    query += searchCondition;
+    countQuery += searchCondition;
+  }
+
+  query += ` ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+  params.push(limit, offset);
+
+  return Promise.all([db.execute(query, params), getUsersCount(countQuery)]);
 };
 
-const getUsersCount = () => {
-  const query = `SELECT COUNT(id) AS count FROM ticketing.users`;
+const getUsersCount = (query) => {
   return db.execute(query);
 };
 
